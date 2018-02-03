@@ -11,12 +11,20 @@
 |
 */
 
+// Suppression de la vue 'welcome'
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('home');
 });
 
 Auth::routes();
 
+// Si on est sur le site principale multiblog.dev
+Route::domain(config('tenancy.hostname.default'))->group(function () {
+    Route::get('/home', 'BlogController@index')->name('home');
+    Route::resource('/blogs', 'BlogController');
+});
+
+// Si on est sur un site tenant
 Route::get('/home', 'ArticleController@index')->name('home');
 
 Route::resource('/articles', 'ArticleController');
